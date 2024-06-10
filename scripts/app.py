@@ -1,6 +1,7 @@
 import pygame
-import os
+
 from scripts.game import Game
+from scripts.function import load_image
 
 class App:
 
@@ -12,8 +13,7 @@ class App:
         self.clock = pygame.time.Clock()
     
         pygame.display.set_caption("DuDleJuMp")
-        image = pygame.image.load(os.path.join("assets", "icons", "icon.ico"))
-        pygame.display.set_icon(image)
+        pygame.display.set_icon(load_image("assets", "icons", "icon.ico"))
 
         self.game = Game()
 
