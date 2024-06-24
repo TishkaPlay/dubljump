@@ -1,6 +1,7 @@
 import pygame
 from scripts.game import Game
 from scripts.function import load_image
+from scripts.constants import display_size, createplatformevent
 
 class App:
 
@@ -8,7 +9,7 @@ class App:
         self.running = True
         self.maxFPS = 60
 
-        self.scene = pygame.display.set_mode((480, 720))
+        self.scene = pygame.display.set_mode(display_size)
         self.clock = pygame.time.Clock()
     
         pygame.display.set_caption("DuDleJuMp")
@@ -28,11 +29,13 @@ class App:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                     self.running = False
-
             elif event.type == pygame.KEYDOWN:
                 self.game.process_key_down_event(event.key)
             elif event.type == pygame.KEYUP:
                 self.game.process_key_up_event(event.key)
+
+            elif event.type == createplatformevent:
+                self.game.platforms.append(event.platform)
 
     def update(self):
         self.game.update_objekts()

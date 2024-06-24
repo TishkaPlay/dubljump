@@ -1,15 +1,19 @@
 from scripts.sprite import Sprite
+from scripts.constants import display_size
+import pygame
+
 
 class Player(Sprite):
-    def __init__(self, center, image, speed, jump_power, gravity):
+    def __init__(self, image, center, speed, jump_power, gravity):
         super().__init__(image, center)
         self.speed = speed
         self.jump_power = jump_power
-        self.gravity = gravity  
+        self.gravity = gravity
         self.walking_right = False
         self.walking_left = False
         self.velocity_y = 0
         self.on_platform = False
+        self.original_image = image.copy()
 
     def update(self):
         self.velocity_y = min(self.velocity_y + self.gravity, 15)
@@ -18,5 +22,27 @@ class Player(Sprite):
         if self.walking_left != self.walking_right:
             if self.walking_left:
                 self.rect.x -= self.speed
+                self.image = pygame.transform.flip(self.original_image, True, False)
             else:
                 self.rect.x += self.speed
+                self.image = self.original_image.copy()
+
+        if self.on_platform:
+            self.velocity_y = -self.jump_power
+            self.on_platform = False
+
+        if self.rect.right < 0:
+            self.rect.left = display_size[0]
+        if self.rect.left > display_size[0]:
+            self.rect.right = 0
+
+    def collide(self, other_rect):
+        rect = pygame.Rect(self.rect.bottomleft, (self.rect.width, 20))
+        return self.velocity_y > 0 and other_rect.colliderect(rect)
+    
+    def reset(self, coords):
+        super().__init__(self.original_image, coords)
+
+        self.is_walking_left = False
+        self.is_walking_right = False
+        self.velocity_y = 0

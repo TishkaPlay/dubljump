@@ -1,3 +1,7 @@
+# pip install pyinstaller 
+# py -m pip install pyinstaller 
+# pyinstaller --add-data "assets;./assets" --icon=assets/icons/icon.ico -F -w main.py
+
 import pygame
 from scripts.app import App
 def main():
